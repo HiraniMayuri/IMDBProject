@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="IMDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Actor">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Sex" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="DOB" Type="datetime" Nullable="false" />
+    <Property Name="Bio" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="MovieId" Type="int" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" />
+  </EntityType>
+  <EntityType Name="Movie">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="YearOfRelease" Type="int" Nullable="false" />
+    <Property Name="Plot" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Poster" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="ProducerId" Type="int" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" />
+  </EntityType>
+  <EntityType Name="Producer">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Sex" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="DOB" Type="datetime" Nullable="false" />
+    <Property Name="Bio" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMDB.dbo.ActorDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="ActorDetail">
+    <Key>
+      <PropertyRef Name="ID" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="Sex" />
+      <PropertyRef Name="DOB" />
+      <PropertyRef Name="Bio" />
+      <PropertyRef Name="MovieName" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Sex" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="DOB" Type="datetime" Nullable="false" />
+    <Property Name="Bio" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" />
+    <Property Name="MovieName" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'IMDB.dbo.MovieDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="MovieDetail">
+    <Key>
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="ID" />
+      <PropertyRef Name="YearOfRelease" />
+      <PropertyRef Name="Plot" />
+      <PropertyRef Name="Poster" />
+      <PropertyRef Name="ProducerName" />
+    </Key>
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="YearOfRelease" Type="int" Nullable="false" />
+    <Property Name="Plot" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Poster" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="IsDeleted" Type="bit" />
+    <Property Name="ProducerName" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Actors_Movies">
+    <End Role="Movie" Type="Self.Movie" Multiplicity="1" />
+    <End Role="Actor" Type="Self.Actor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Movie">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Actor">
+        <PropertyRef Name="MovieId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Movies_Producers">
+    <End Role="Producer" Type="Self.Producer" Multiplicity="1" />
+    <End Role="Movie" Type="Self.Movie" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Producer">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Movie">
+        <PropertyRef Name="ProducerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="IMDBModelStoreContainer">
+    <EntitySet Name="Actor" EntityType="Self.Actor" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Movie" EntityType="Self.Movie" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Producer" EntityType="Self.Producer" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ActorDetail" EntityType="Self.ActorDetail" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [ActorDetail].[ID] AS [ID], 
+    [ActorDetail].[Name] AS [Name], 
+    [ActorDetail].[Sex] AS [Sex], 
+    [ActorDetail].[DOB] AS [DOB], 
+    [ActorDetail].[Bio] AS [Bio], 
+    [ActorDetail].[IsDeleted] AS [IsDeleted], 
+    [ActorDetail].[MovieName] AS [MovieName]
+    FROM [dbo].[ActorDetail] AS [ActorDetail]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="MovieDetail" EntityType="Self.MovieDetail" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [MovieDetail].[Name] AS [Name], 
+    [MovieDetail].[ID] AS [ID], 
+    [MovieDetail].[YearOfRelease] AS [YearOfRelease], 
+    [MovieDetail].[Plot] AS [Plot], 
+    [MovieDetail].[Poster] AS [Poster], 
+    [MovieDetail].[IsDeleted] AS [IsDeleted], 
+    [MovieDetail].[ProducerName] AS [ProducerName]
+    FROM [dbo].[MovieDetail] AS [MovieDetail]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_Actors_Movies" Association="Self.FK_Actors_Movies">
+      <End Role="Movie" EntitySet="Movie" />
+      <End Role="Actor" EntitySet="Actor" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Movies_Producers" Association="Self.FK_Movies_Producers">
+      <End Role="Producer" EntitySet="Producer" />
+      <End Role="Movie" EntitySet="Movie" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
